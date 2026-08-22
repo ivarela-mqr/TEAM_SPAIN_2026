@@ -14,17 +14,17 @@ public class Climber {
 
 
     public Climber(HardwareMap hardwareMap) {
-        climber = hardwareMap.get(DcMotor.class, "Intake");
+        //climber = hardwareMap.get(DcMotor.class, "Intake");
         elevator = hardwareMap.get(Servo.class, "Elevator");
 
-        climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void ManualTeleOp(Gamepad gamepad1, Telemetry telemetry){
-        if(gamepad1.triangle){
+        /*if(gamepad1.triangle){
             climber.setPower(1);
         }else {
             climber.setPower(0);
-        }
+        }*/
 
         if(gamepad1.dpad_up){
             extendClimber(0.05);

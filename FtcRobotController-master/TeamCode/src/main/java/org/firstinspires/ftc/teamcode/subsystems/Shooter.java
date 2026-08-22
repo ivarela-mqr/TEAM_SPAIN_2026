@@ -18,7 +18,7 @@ public class Shooter {
     Debouncer shootDebounce, limitDebounce;
 
     double limitVel = 1200;
-    double maxVel = 1400;
+    double maxVel = 2100;
 
     //PIDFCoefficients coefficients = new PIDFCoefficients(22, 0, 1.7, 15);
 

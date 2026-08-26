@@ -15,10 +15,14 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 public class Shooter {
     public  DcMotorEx shooter0, shooter1, transfer;
     private boolean shooting = false;
-    Debouncer shootDebounce, limitDebounce;
+    private boolean shootBack = false;
+    Debouncer shootDebounce, limitDebounce, backDebounce;
 
     double limitVel = 1200;
     double maxVel = 2100;
+    double backVel = -700;
+
+    double targetVel = maxVel;
 
     //PIDFCoefficients coefficients = new PIDFCoefficients(22, 0, 1.7, 15);
 
@@ -38,6 +42,7 @@ public class Shooter {
 
         shootDebounce = new Debouncer(300);
         limitDebounce = new Debouncer(300);
+        backDebounce = new Debouncer(300);
     }
 
 
@@ -58,26 +63,52 @@ public class Shooter {
 
     public void TeleOp(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
         if(gamepad1.circle && shootDebounce.isReady()){
-            shooting = !shooting;
+            if(!shooting){
+                shooting = true;
+                shootBack = false;
+            }else{
+                shooting = false;
+            }
+        }
+        if(gamepad1.square && backDebounce.isReady()){
+            if(!shootBack){
+                shootBack = true;
+                shooting = false;
+            }else{
+                shootBack = false;
+            }
         }
 
-        if(shooting && !isReady()){
-            setPowerShooter(1);
+        if (shootBack){
+            setVelShooter(backVel);
         }else if (shooting){
-            setVelShooter(maxVel);
+            setPowerShooter(1);
         }else{
             setPowerShooter(0);
 
         }
 
-        if(gamepad1.right_trigger_pressed && isReady()){
+        if((gamepad1.right_trigger_pressed && isReady()) || shootBack){
             transfer.setPower(1);
         }else {
             transfer.setPower(0);
         }
+
+
         telemetry.addData("currVel", shooter0.getVelocity());
         telemetry.addData("limitVel", limitVel);
+        if(shooting)
+            telemetry.addData("shooting",shooting);
+        if(shootBack)
+            telemetry.addData("backshooting",shootBack);
     }
+
+    boolean isShooting(){
+        return(shooting || shootBack);
+    }
+
+
+
 
     public void TeleOpPrueba(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
         if(gamepad1.circle && shootDebounce.isReady()){
@@ -106,6 +137,8 @@ public class Shooter {
 
         telemetry.addData("currVel", shooter0.getVelocity());
         telemetry.addData("limitVel", limitVel);
+        telemetry.addData("shootBack", shootBack);
+        telemetry.addData("shooting", shooting);
     }
 
     public boolean isReady(){

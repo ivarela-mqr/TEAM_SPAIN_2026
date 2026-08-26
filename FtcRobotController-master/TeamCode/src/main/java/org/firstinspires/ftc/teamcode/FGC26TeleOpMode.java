@@ -21,7 +21,7 @@ public class FGC26TeleOpMode extends OpMode {
         driveTrain = new DriveTrain(hardwareMap);
         shooter = new Shooter(hardwareMap);
         intake = new Intake(hardwareMap);
-        climber = new Climber(hardwareMap);
+        //climber = new Climber(hardwareMap);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FGC26TeleOpMode extends OpMode {
         driveTrain.TeleOp(gamepad1, gamepad2, telemetry);
         shooter.TeleOp(gamepad1,gamepad2,telemetry);
         intake.TeleOp(gamepad1,gamepad2,telemetry);
-        climber.ManualTeleOp(gamepad1,telemetry);
+        //climber.ManualTeleOp(gamepad1,telemetry);
 
         telemetry.update();
     }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,9 +15,10 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 
 public class Shooter {
     public  DcMotorEx shooter0, shooter1, transfer;
+    public Servo block;
     private boolean shooting = false;
     private boolean shootBack = false;
-    Debouncer shootDebounce, limitDebounce, backDebounce;
+    Debouncer shootDebounce, limitDebounce, backDebounce, blockDebounce;
 
     double limitVel = 1200;
     double maxVel = 2100;
@@ -31,6 +33,7 @@ public class Shooter {
         shooter0 = hardwareMap.get(DcMotorEx.class,"Shoot_left");
         shooter1 = hardwareMap.get(DcMotorEx.class,"Shoot_right");
         transfer = hardwareMap.get(DcMotorEx.class,"Transfer");
+        block =  hardwareMap.get(Servo.class,"BlockShooter");
 
         shooter1.setDirection(DcMotorSimple.Direction.REVERSE);
         transfer.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -43,6 +46,7 @@ public class Shooter {
         shootDebounce = new Debouncer(300);
         limitDebounce = new Debouncer(300);
         backDebounce = new Debouncer(300);
+        blockDebounce = new Debouncer(300);
     }
 
 
@@ -76,6 +80,14 @@ public class Shooter {
                 shooting = false;
             }else{
                 shootBack = false;
+            }
+        }
+
+        if(gamepad1.right_bumper && blockDebounce.isReady()){
+            if(block.getPosition()<0.5){
+                block.setPosition(1);
+            }else {
+                block.setPosition(0);
             }
         }
 

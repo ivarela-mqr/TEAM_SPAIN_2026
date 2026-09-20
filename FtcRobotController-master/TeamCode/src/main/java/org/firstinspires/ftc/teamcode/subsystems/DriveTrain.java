@@ -13,13 +13,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class DriveTrain {
     private final DcMotor left, right;
 
-    private double driveVelFactor = 1;
-    private double rotVelFactor = 1;
+    private double driveVelFactor;
+
 
     public DriveTrain(HardwareMap hardwareMap){
         //motors
-        left = hardwareMap.get(DcMotor.class, "Move_left");
-        right = hardwareMap.get(DcMotor.class, "Move_right");
+        left = hardwareMap.get(DcMotor.class, "tankLeft");
+        right = hardwareMap.get(DcMotor.class, "tankRight");
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

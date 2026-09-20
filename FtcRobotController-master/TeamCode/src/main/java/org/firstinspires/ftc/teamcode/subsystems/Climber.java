@@ -10,31 +10,32 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Climber {
     public DcMotor climber;
-    public Servo elevator;
+    public boolean hasStarted = false;
 
 
     public Climber(HardwareMap hardwareMap) {
-        //climber = hardwareMap.get(DcMotor.class, "Intake");
-        elevator = hardwareMap.get(Servo.class, "Elevator");
+        climber = hardwareMap.get(DcMotor.class, "climber");
 
-        //climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
     public void ManualTeleOp(Gamepad gamepad1, Telemetry telemetry){
-        /*if(gamepad1.triangle){
+        if(gamepad1.cross){
             climber.setPower(1);
         }else {
-            climber.setPower(0);
-        }*/
-
-        if(gamepad1.dpad_up){
-            extendClimber(0.05);
-        } else if (gamepad1.dpad_down) {
-            extendClimber(-0.05);
+            climber.setPower(0.2);
         }
     }
 
-    private void extendClimber(double x){
-        double newPos = elevator.getPosition() + x;
-        elevator.setPosition(x);
+    public void TeleOp(Gamepad gamepad1, Telemetry telemetry){
+        if(gamepad1.cross){
+            climber.setPower(1);
+            hasStarted = true;
+        }else if (hasStarted){
+            climber.setPower(0.1);
+        } else{
+            climber.setPower(0);
+        }
     }
+
 }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 @TeleOp
-public class FGC26TeleOpMode extends OpMode {
+public class TestingTeleOpMode extends OpMode {
     DriveTrain driveTrain;
     Shooter shooter;
     Intake intake;
@@ -28,10 +28,8 @@ public class FGC26TeleOpMode extends OpMode {
     public void start(){
         gamepad1.rumble(20);
         gamepad2.rumble(20);
-
-        intake.Start();
-        shooter.Start();
     }
+
 
     @Override
     public void loop() {

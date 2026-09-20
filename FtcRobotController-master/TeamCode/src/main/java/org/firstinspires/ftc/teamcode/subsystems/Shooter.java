@@ -14,32 +14,30 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 
 
 public class Shooter {
-    public  DcMotorEx shooter0, shooter1, transfer;
+    public  DcMotorEx shooterL, shooterR, transfer;
     public Servo block;
     private boolean shooting = false;
     private boolean shootBack = false;
     Debouncer shootDebounce, limitDebounce, backDebounce, blockDebounce;
 
     double limitVel = 1200;
-    double maxVel = 2100;
     double backVel = -700;
 
-    double targetVel = maxVel;
 
     //PIDFCoefficients coefficients = new PIDFCoefficients(22, 0, 1.7, 15);
 
 
     public Shooter (HardwareMap hardwareMap){
-        shooter0 = hardwareMap.get(DcMotorEx.class,"Shoot_left");
-        shooter1 = hardwareMap.get(DcMotorEx.class,"Shoot_right");
-        transfer = hardwareMap.get(DcMotorEx.class,"Transfer");
-        block =  hardwareMap.get(Servo.class,"BlockShooter");
+        shooterL = hardwareMap.get(DcMotorEx.class,"shootLeft");
+        shooterR = hardwareMap.get(DcMotorEx.class,"shootRight");
+        transfer = hardwareMap.get(DcMotorEx.class,"transfer");
+        block =  hardwareMap.get(Servo.class,"blockShooter");
 
-        shooter1.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterR.setDirection(DcMotorSimple.Direction.REVERSE);
         transfer.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        shooter1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooterL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooterR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         //shooter0.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, coefficients);
         //shooter1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, coefficients);
 
@@ -56,15 +54,21 @@ public class Shooter {
     }
 
     private void setPowerShooter(double power){
-        shooter0.setPower(power);
-        shooter1.setPower(power);
+        shooterL.setPower(power);
+        shooterR.setPower(power);
     }
     private void setVelShooter(double vel){
-        shooter0.setVelocity(vel);
-        shooter1.setVelocity(vel);
+        shooterL.setVelocity(vel);
+        shooterR.setVelocity(vel);
     }
 
 
+    public void Start(){
+        shooting = false;
+        shootBack = true;
+
+
+    }
     public void TeleOp(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
         if(gamepad1.circle && shootDebounce.isReady()){
             if(!shooting){
@@ -97,7 +101,6 @@ public class Shooter {
             setPowerShooter(1);
         }else{
             setPowerShooter(0);
-
         }
 
         if((gamepad1.right_trigger_pressed && isReady()) || shootBack){
@@ -107,7 +110,7 @@ public class Shooter {
         }
 
 
-        telemetry.addData("currVel", shooter0.getVelocity());
+        telemetry.addData("currVel", shooterL.getVelocity());
         telemetry.addData("limitVel", limitVel);
         if(shooting)
             telemetry.addData("shooting",shooting);
@@ -118,6 +121,7 @@ public class Shooter {
     boolean isShooting(){
         return(shooting || shootBack);
     }
+
 
 
 
@@ -147,13 +151,13 @@ public class Shooter {
             limitVel-=50;
         }
 
-        telemetry.addData("currVel", shooter0.getVelocity());
+        telemetry.addData("currVel", shooterL.getVelocity());
         telemetry.addData("limitVel", limitVel);
         telemetry.addData("shootBack", shootBack);
         telemetry.addData("shooting", shooting);
     }
 
     public boolean isReady(){
-        return (Math.min(shooter0.getVelocity(),shooter1.getVelocity()) > 1200);
+        return (Math.min(shooterL.getVelocity(), shooterR.getVelocity()) > 1200);
     }
 }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 @TeleOp
-public class FGC26TeleOpMode extends OpMode {
+public class servosPruebas extends OpMode {
     DriveTrain driveTrain;
     Shooter shooter;
     Intake intake;
@@ -30,17 +30,32 @@ public class FGC26TeleOpMode extends OpMode {
         gamepad1.rumble(20);
         gamepad2.rumble(20);
 
-        intake.Start();
-        shooter.Start();
 
     }
 
     @Override
     public void loop() {
-        driveTrain.TeleOp(gamepad1, telemetry);
-        shooter.TeleOp(gamepad1,telemetry, climbing);
-        intake.TeleOp(gamepad1,telemetry, climbing, shooter.isUnblocked());
-        climbing = climber.TeleOp(gamepad1,telemetry);
+        if (gamepad1.cross){
+            if(intake.blockL.getPosition()>0.5)
+                intake.blockL.setPosition(0);
+            else
+                intake.blockL.setPosition(1);
+
+            if(intake.blockR.getPosition()>0.5)
+                intake.blockR.setPosition(0);
+            else
+                intake.blockR.setPosition(1);
+
+            if(shooter.block.getPosition()>0.5)
+                shooter.block.setPosition(0);
+            else
+                shooter.block.setPosition(1);
+        }
+
+        telemetry.addData("pos block l", intake.blockL.getPosition());
+        telemetry.addData("pos block r", intake.blockR.getPosition());
+        telemetry.addData("pos block shooter", shooter.block.getPosition());
+
 
         telemetry.update();
     }

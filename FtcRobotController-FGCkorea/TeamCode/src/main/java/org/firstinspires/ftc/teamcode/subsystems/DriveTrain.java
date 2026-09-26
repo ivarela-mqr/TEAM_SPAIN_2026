@@ -27,7 +27,7 @@ public class DriveTrain {
         left.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void TeleOp(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
+    public void TeleOp(Gamepad gamepad1, Telemetry telemetry){
 
         if (gamepad1.left_stick_button){
             driveVelFactor = 0.25;

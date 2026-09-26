@@ -20,7 +20,7 @@ public class Shooter {
     private boolean shootBack = false;
     Debouncer shootDebounce, limitDebounce, backDebounce, blockDebounce;
 
-    double limitVel = 1200;
+    double limitVel = 1150;
     double backVel = -700;
 
 
@@ -44,7 +44,7 @@ public class Shooter {
         shootDebounce = new Debouncer(300);
         limitDebounce = new Debouncer(300);
         backDebounce = new Debouncer(300);
-        blockDebounce = new Debouncer(300);
+        blockDebounce = new Debouncer(1000);
     }
 
 
@@ -69,8 +69,9 @@ public class Shooter {
 
 
     }
-    public void TeleOp(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
-        if(gamepad1.circle && shootDebounce.isReady()){
+    public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing){
+        if(gamepad1.right_bumper && blockDebounce.isReady()){
+            //shoot modes
             if(!shooting){
                 shooting = true;
                 shootBack = false;
@@ -78,6 +79,8 @@ public class Shooter {
                 shooting = false;
             }
         }
+        if(shooting)
+            unblock();
         if(gamepad1.square && backDebounce.isReady()){
             if(!shootBack){
                 shootBack = true;
@@ -87,43 +90,46 @@ public class Shooter {
             }
         }
 
-        if(gamepad1.right_bumper && blockDebounce.isReady()){
-            if(block.getPosition()<0.5){
-                block.setPosition(1);
-            }else {
-                block.setPosition(0);
-            }
-        }
 
-        if (shootBack){
-            setVelShooter(backVel);
-        }else if (shooting){
-            setPowerShooter(1);
+        if(!climbing){
+            if (shootBack){
+                setVelShooter(backVel);
+            }else if (shooting){
+                setPowerShooter(1);
+            }else{
+                setPowerShooter(0);
+            }
+
+            if(gamepad1.right_trigger_pressed && (isReady() || shootBack)){
+                transfer.setPower(1);
+            }else {
+                transfer.setPower(0);
+            }
         }else{
             setPowerShooter(0);
-        }
-
-        if((gamepad1.right_trigger_pressed && isReady()) || shootBack){
-            transfer.setPower(1);
-        }else {
             transfer.setPower(0);
         }
+
 
 
         telemetry.addData("currVel", shooterL.getVelocity());
         telemetry.addData("limitVel", limitVel);
         if(shooting)
-            telemetry.addData("shooting",shooting);
+            telemetry.addData("shooting", true);
         if(shootBack)
-            telemetry.addData("backshooting",shootBack);
+            telemetry.addData("backshooting", true);
+        telemetry.addData("Pos block",block.getPosition());
     }
 
     boolean isShooting(){
         return(shooting || shootBack);
     }
-
-
-
+    private void unblock(){
+        block.setPosition(0); //open
+    }
+    public boolean isUnblocked(){
+        return shooting;
+    }
 
 
     public void TeleOpPrueba(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
@@ -158,6 +164,6 @@ public class Shooter {
     }
 
     public boolean isReady(){
-        return (Math.min(shooterL.getVelocity(), shooterR.getVelocity()) > 1200);
+        return (Math.min(shooterL.getVelocity(), shooterR.getVelocity()) > limitVel);
     }
 }

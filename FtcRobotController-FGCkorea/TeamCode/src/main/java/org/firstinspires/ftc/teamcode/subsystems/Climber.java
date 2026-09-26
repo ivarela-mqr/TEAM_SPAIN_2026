@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,6 +18,7 @@ public class Climber {
         climber = hardwareMap.get(DcMotor.class, "climber");
 
         climber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        climber.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
     public void ManualTeleOp(Gamepad gamepad1, Telemetry telemetry){
@@ -27,7 +29,7 @@ public class Climber {
         }
     }
 
-    public void TeleOp(Gamepad gamepad1, Telemetry telemetry){
+    public boolean TeleOp(Gamepad gamepad1, Telemetry telemetry){
         if(gamepad1.cross){
             climber.setPower(1);
             hasStarted = true;
@@ -36,6 +38,12 @@ public class Climber {
         } else{
             climber.setPower(0);
         }
+
+        if (gamepad1.options){
+            hasStarted = false;
+        }
+
+        return hasStarted;
     }
 
 }

@@ -33,12 +33,14 @@ public class TestingTeleOpMode extends OpMode {
 
     @Override
     public void loop() {
-        driveTrain.TeleOp(gamepad1, gamepad2, telemetry);
-        shooter.TeleOp(gamepad1,gamepad2,telemetry);
-        intake.TeleOp(gamepad1,gamepad2,telemetry);
+        driveTrain.TeleOp(gamepad1, telemetry);
+        shooter.TeleOp(gamepad1,telemetry, true);
+        intake.TeleOp(gamepad1,telemetry, true,true);
         climber.TeleOp(gamepad1,telemetry);
 
         telemetry.update();
     }
+
+
 
 }

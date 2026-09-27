@@ -29,13 +29,10 @@ public class DriveTrain {
 
     public void TeleOp(Gamepad gamepad1, Telemetry telemetry){
 
-        if (gamepad1.left_stick_button){
+        if (gamepad1.left_stick_button)
             driveVelFactor = 0.25;
-        }else{
+        else
             driveVelFactor = 1;
-        }
-
-
 
         double leftPower  = gamepad1.left_stick_y - gamepad1.right_stick_x;
         double rightPower = gamepad1.left_stick_y + gamepad1.right_stick_x;

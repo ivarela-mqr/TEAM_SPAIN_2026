@@ -18,7 +18,7 @@ public class Intake {
     public Debouncer intakeDebouncer, outDebouncer;
     public Servo blockL, blockR;
     private final ElapsedTime unblockTimer = new ElapsedTime();
-    private boolean waitingToBlock = false;
+    //private boolean waitingToBlock = false;
 
 
     public Intake(HardwareMap hardwareMap) {
@@ -35,10 +35,9 @@ public class Intake {
 
     public void Start(){
         expand();
-        if(isExpanded())
-            intaking = true;
+        intaking = false;
     }
-    public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing, boolean unblocked){
+    public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing, boolean isTransferOn){
         /*if(500<timer.milliseconds() && timer.milliseconds()<1500){
             expand();
         }
@@ -49,7 +48,7 @@ public class Intake {
         if(!climbing){
             if(gamepad1.triangle){
                 intake.setPower(-1);
-            } else if (intaking) {
+            } else if (intaking || isTransferOn) {
                 intake.setPower(1);
             }else{
                 intake.setPower(0);
@@ -58,18 +57,18 @@ public class Intake {
             intake.setPower(0);
         }
 
-        if (unblocked && !waitingToBlock) {
+        /*if (unblocked && !waitingToBlock) {
             waitingToBlock = true;
             unblockTimer.reset();
         }
+        */
 
-        // Después de 1 segundo
+        /*
         if (waitingToBlock && unblockTimer.seconds() >= 4) {
             block();
             waitingToBlock = false;
         }
 
-/*
         if(gamepad1.dpad_down){
             block();
         }
@@ -81,16 +80,12 @@ public class Intake {
         telemetry.addData("Pos R",blockR.getPosition());
     }
 
-    public void startExpand(){
+    public void expand(){//old version: l=0.5 r=0.4
         blockL.setPosition(0.5);
         blockR.setPosition(0.5);
     }
-    public void expand(){ //old version: l=0.5 r=0.4
-        blockL.setPosition(0);
-        blockR.setPosition(1);
-    }
     public  boolean isExpanded(){
-        return (blockL.getPosition()<0.1);
+        return (blockL.getPosition()<0.6);
     }
     public void block(){ //old version: l=1 r=0
         blockL.setPosition(1);

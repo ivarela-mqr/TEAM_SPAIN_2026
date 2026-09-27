@@ -39,7 +39,7 @@ public class FGC26TeleOpMode extends OpMode {
     public void loop() {
         driveTrain.TeleOp(gamepad1, telemetry);
         shooter.TeleOp(gamepad1,telemetry, climbing);
-        intake.TeleOp(gamepad1,telemetry, climbing, shooter.isUnblocked());
+        intake.TeleOp(gamepad1,telemetry, climbing, shooter.isTransferOn());
         climbing = climber.TeleOp(gamepad1,telemetry);
 
         telemetry.update();

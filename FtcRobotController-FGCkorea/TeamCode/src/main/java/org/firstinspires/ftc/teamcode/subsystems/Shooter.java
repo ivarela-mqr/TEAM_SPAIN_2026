@@ -90,6 +90,13 @@ public class Shooter {
             }
         }
 
+        if(gamepad1.right_bumper && blockDebounce.isReady()){
+            if(block.getPosition()<0.5){
+                block.setPosition(1);
+            }else {
+                block.setPosition(0);
+            }
+        }
 
         if(!climbing){
             if (shootBack){
@@ -101,6 +108,7 @@ public class Shooter {
             }
 
             if(gamepad1.right_trigger_pressed && (isReady() || shootBack)){
+                telemetry.addLine("transfer on");
                 transfer.setPower(1);
             }else {
                 transfer.setPower(0);
@@ -109,7 +117,6 @@ public class Shooter {
             setPowerShooter(0);
             transfer.setPower(0);
         }
-
 
 
         telemetry.addData("currVel", shooterL.getVelocity());
@@ -165,5 +172,8 @@ public class Shooter {
 
     public boolean isReady(){
         return (Math.min(shooterL.getVelocity(), shooterR.getVelocity()) > limitVel);
+    }
+    public boolean isTransferOn(){
+        return transfer.getPower()>0.5;
     }
 }

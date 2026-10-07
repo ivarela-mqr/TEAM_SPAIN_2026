@@ -7,10 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Debouncer;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class Shooter {
@@ -23,6 +26,8 @@ public class Shooter {
     double limitVel = 1150;
     double backVel = -800;
 
+    private ElapsedTime timer;
+
 
     //PIDFCoefficients coefficients = new PIDFCoefficients(22, 0, 1.7, 15);
 
@@ -32,6 +37,8 @@ public class Shooter {
         shooterR = hardwareMap.get(DcMotorEx.class,"shootRight");
         transfer = hardwareMap.get(DcMotorEx.class,"transfer");
         block =  hardwareMap.get(Servo.class,"blockShooter");
+
+        timer = new ElapsedTime();
 
         shooterR.setDirection(DcMotorSimple.Direction.REVERSE);
         transfer.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -66,7 +73,7 @@ public class Shooter {
     public void Start(){
         shooting = false;
         shootBack = true;
-
+        timer.reset();
 
     }
     public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing){
@@ -98,7 +105,15 @@ public class Shooter {
             }
         }
 
-        if(!climbing){
+        if(climbing){
+            if (timer.time(TimeUnit.SECONDS) > 145){
+                shooterL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                shooterR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+            setPowerShooter(0);
+            transfer.setPower(0);
+
+        }else{
             if (shootBack){
                 setVelShooter(backVel);
             }else if (shooting){
@@ -113,9 +128,6 @@ public class Shooter {
             }else {
                 transfer.setPower(0);
             }
-        }else{
-            setPowerShooter(0);
-            transfer.setPower(0);
         }
 
 
@@ -138,37 +150,6 @@ public class Shooter {
         return shooting;
     }
 
-
-    public void TeleOpPrueba(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry){
-        if(gamepad1.circle && shootDebounce.isReady()){
-            shooting = !shooting;
-        }
-
-        if(shooting){
-            setVelShooter(limitVel);
-        }else{
-            setVelShooter(0);
-        }
-
-        if(gamepad1.right_trigger_pressed){
-            transfer.setPower(1);
-        }else {
-            transfer.setPower(0);
-        }
-
-
-        if (gamepad1.dpad_up && limitDebounce.isReady()){
-            limitVel+=50;
-        }
-        if (gamepad1.dpad_down && limitDebounce.isReady()){
-            limitVel-=50;
-        }
-
-        telemetry.addData("currVel", shooterL.getVelocity());
-        telemetry.addData("limitVel", limitVel);
-        telemetry.addData("shootBack", shootBack);
-        telemetry.addData("shooting", shooting);
-    }
 
     public boolean isReady(){
         return (Math.min(shooterL.getVelocity(), shooterR.getVelocity()) > limitVel);

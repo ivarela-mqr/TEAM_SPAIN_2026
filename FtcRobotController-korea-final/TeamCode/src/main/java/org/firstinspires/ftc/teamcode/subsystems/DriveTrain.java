@@ -27,15 +27,20 @@ public class DriveTrain {
         left.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void TeleOp(Gamepad gamepad1, Telemetry telemetry){
+    public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing){
 
+        driveVelFactor = 1;
         if (gamepad1.left_stick_button)
-            driveVelFactor = 0.25;
-        else
-            driveVelFactor = 1;
+            driveVelFactor = driveVelFactor *0.25;
 
-        double leftPower  = gamepad1.left_stick_y - gamepad1.right_stick_x;
-        double rightPower = gamepad1.left_stick_y + gamepad1.right_stick_x;
+        if(climbing)
+            driveVelFactor = -driveVelFactor;
+
+
+
+
+        double leftPower  = gamepad1.left_stick_y + (climbing ? gamepad1.right_stick_x : -gamepad1.right_stick_x);
+        double rightPower = gamepad1.left_stick_y + (climbing ? -gamepad1.right_stick_x : gamepad1.right_stick_x);
 
         if (Math.abs(leftPower) >= 1 || Math.abs(rightPower) >= 1){
             normalize(leftPower, rightPower);

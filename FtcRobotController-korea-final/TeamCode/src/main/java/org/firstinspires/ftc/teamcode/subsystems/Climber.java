@@ -45,7 +45,7 @@ public class Climber {
             climber.setPower(0);
         }
 
-        if (gamepad1.options && climbDebounce.isReady()){
+        if (gamepad1.share && climbDebounce.isReady()){
             hasStarted = !hasStarted;
         }
 

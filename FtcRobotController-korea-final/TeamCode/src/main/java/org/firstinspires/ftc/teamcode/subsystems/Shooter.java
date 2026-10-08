@@ -71,8 +71,8 @@ public class Shooter {
 
 
     public void Start(){
-        shooting = false;
-        shootBack = true;
+        shooting = true;
+        shootBack = false;
         timer.reset();
 
     }

@@ -38,10 +38,6 @@ public class Intake {
         intaking = false;
     }
     public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing, boolean isTransferOn){
-        /*if(500<timer.milliseconds() && timer.milliseconds()<1500){
-            expand();
-        }
-         */
         if(gamepad1.left_bumper && intakeDebouncer.isReady())
             intaking = !intaking;
 
@@ -56,25 +52,6 @@ public class Intake {
         }else {
             intake.setPower(0);
         }
-
-        /*if (unblocked && !waitingToBlock) {
-            waitingToBlock = true;
-            unblockTimer.reset();
-        }
-        */
-
-        /*
-        if (waitingToBlock && unblockTimer.seconds() >= 4) {
-            block();
-            waitingToBlock = false;
-        }
-
-        if(gamepad1.dpad_down){
-            block();
-        }
-        if(gamepad1.dpad_up){
-            expand();
-        }*/
         
         telemetry.addData("Pos L",blockL.getPosition());
         telemetry.addData("Pos R",blockR.getPosition());

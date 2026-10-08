@@ -77,7 +77,7 @@ public class Shooter {
 
     }
     public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing){
-        if(gamepad1.right_bumper && blockDebounce.isReady()){
+        /*if(gamepad1.right_bumper && blockDebounce.isReady()){
             //shoot modes
             if(!shooting){
                 shooting = true;
@@ -86,6 +86,8 @@ public class Shooter {
                 shooting = false;
             }
         }
+
+         */
         if(shooting)
             unblock();
         if(gamepad1.square && backDebounce.isReady()){

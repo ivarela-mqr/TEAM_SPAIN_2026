@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 @TeleOp
-public class pruebasMotores extends OpMode {
+public class PruebasMotores extends OpMode {
     DriveTrain driveTrain;
     Shooter shooter;
     Intake intake;

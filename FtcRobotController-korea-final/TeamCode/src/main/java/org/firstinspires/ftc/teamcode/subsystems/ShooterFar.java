@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.Debouncer;
 import java.util.concurrent.TimeUnit;
 
 
-public class Shooter {
+public class ShooterFar {
     public  DcMotorEx shooterL, shooterR, transfer;
     public Servo block;
     private boolean shooting = false;
@@ -32,7 +32,7 @@ public class Shooter {
     //PIDFCoefficients coefficients = new PIDFCoefficients(22, 0, 1.7, 15);
 
 
-    public Shooter (HardwareMap hardwareMap){
+    public ShooterFar(HardwareMap hardwareMap){
         shooterL = hardwareMap.get(DcMotorEx.class,"shootLeft");
         shooterR = hardwareMap.get(DcMotorEx.class,"shootRight");
         transfer = hardwareMap.get(DcMotorEx.class,"transfer");

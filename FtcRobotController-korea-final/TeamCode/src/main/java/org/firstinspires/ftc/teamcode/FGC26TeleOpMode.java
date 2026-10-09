@@ -8,11 +8,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Climber;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterFar;
 
 @TeleOp
 public class FGC26TeleOpMode extends OpMode {
     DriveTrain driveTrain;
-    Shooter shooter;
+    ShooterFar shooter;
     Intake intake;
     Climber climber;
     boolean climbing= false;
@@ -20,7 +21,7 @@ public class FGC26TeleOpMode extends OpMode {
     @Override
     public void init() {
         driveTrain = new DriveTrain(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new ShooterFar(hardwareMap);
         intake = new Intake(hardwareMap);
         climber = new Climber(hardwareMap);
     }

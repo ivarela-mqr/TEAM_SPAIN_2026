@@ -21,10 +21,12 @@ public class ShooterFar {
     public Servo block;
     private boolean shooting = false;
     private boolean shootBack = false;
-    Debouncer shootDebounce, limitDebounce, backDebounce, blockDebounce;
+    private boolean shootFar = false;
+    Debouncer shootDebounce, limitDebounce, backDebounce, blockDebounce, farDebounce;
 
     double limitVel = 1150;
     double backVel = -800;
+    double farVel = 1500;
 
     private ElapsedTime timer;
 
@@ -51,6 +53,7 @@ public class ShooterFar {
         shootDebounce = new Debouncer(300);
         limitDebounce = new Debouncer(300);
         backDebounce = new Debouncer(300);
+        farDebounce = new Debouncer(300);
         blockDebounce = new Debouncer(1000);
     }
 
@@ -77,30 +80,56 @@ public class ShooterFar {
 
     }
     public void TeleOp(Gamepad gamepad1, Telemetry telemetry, boolean climbing){
-        /*if(gamepad1.right_bumper && blockDebounce.isReady()){
+        if(gamepad1.right_bumper && blockDebounce.isReady()){
             //shoot modes
             if(!shooting){
                 shooting = true;
                 shootBack = false;
+                shootFar = false;
+                limitVel = 1150;
             }else{
                 shooting = false;
             }
         }
 
-         */
-        if(shooting)
-            unblock();
-        if(gamepad1.square && backDebounce.isReady()){
+        if(gamepad1.square && farDebounce.isReady()){
+            if(!shootFar){
+                shootFar = true;
+                shootBack = false;
+                shooting = false;
+                limitVel = farVel - 200;
+            }else{
+                shootFar = false;
+            }
+        }
+
+        if(gamepad1.circle && backDebounce.isReady()){
             if(!shootBack){
                 shootBack = true;
                 shooting = false;
+                shootFar = false;
             }else{
                 shootBack = false;
             }
         }
 
-        if(gamepad1.right_bumper && blockDebounce.isReady()){
-            if(block.getPosition()<0.5){
+        if(shooting)
+            unblock();
+
+
+
+
+
+
+        if(gamepad1.dpad_up){
+            farVel += 50;
+        }else if(gamepad1.dpad_down){
+            farVel -= 50;
+        }
+
+
+        if (gamepad1.right_bumper && blockDebounce.isReady()){
+            if (block.getPosition() < 0.5){
                 block.setPosition(1);
             }else {
                 block.setPosition(0);
@@ -116,8 +145,8 @@ public class ShooterFar {
             transfer.setPower(0);
 
         }else{
-            if (shootBack){
-                setVelShooter(backVel);
+            if (shootFar){
+                setVelShooter(farVel);
             }else if (shooting){
                 setPowerShooter(1);
             }else{
@@ -137,8 +166,8 @@ public class ShooterFar {
         telemetry.addData("limitVel", limitVel);
         if(shooting)
             telemetry.addData("shooting", true);
-        if(shootBack)
-            telemetry.addData("backshooting", true);
+        if(shootFar)
+            telemetry.addData("farshooting", true);
         telemetry.addData("Pos block",block.getPosition());
     }
 
@@ -154,6 +183,11 @@ public class ShooterFar {
 
 
     public boolean isReady(){
+        return (shooterL.getVelocity() > limitVel) || (shooterR.getVelocity() > limitVel);
+    }
+
+    public boolean isReadyFar(){
+
         return (shooterL.getVelocity() > limitVel) || (shooterR.getVelocity() > limitVel);
     }
     public boolean isTransferOn(){
